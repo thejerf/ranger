@@ -26,13 +26,25 @@ func Take[K, V any](num int, f func(func(K, V) bool) bool) func(func(K, V) bool)
 
 // IntRange turns a range on an int into a component that can be used in
 // functional range pipelines.
-func IntRange(r int) func(func(int, int)bool)bool {
-	return func(yield func(int, int)bool) bool {
+func IntRange(r int) func(func(int, int) bool) bool {
+	return func(yield func(int, int) bool) bool {
 		for i := range r {
 			if !yield(i, i) {
 				return false
 			}
 		}
 		return false
-        }
+	}
+}
+
+func RangeOver(start, stop, jump int) func(func(int) bool) bool {
+	return func(yield func(int) bool) bool {
+		for start < stop {
+			if !yield(start) {
+				return false
+			}
+			start += jump
+		}
+		return false
+	}
 }

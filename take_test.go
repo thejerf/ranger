@@ -13,6 +13,31 @@ func TestTake(t *testing.T) {
 	}
 }
 
+type rangeTest struct {
+	Start int
+	Stop int
+	Jump int
+	Result []int
+}
+
+func TestRangeOver(t *testing.T) {
+	for idx, test := range []rangeTest{
+		{0, 2, 1, []int{0, 1}},
+		{0, -1, 8, []int{}},
+		{0, 1, 1, []int{0}},
+		{0, 10, 2, []int{0, 2, 4, 6, 8}},
+	}{
+		res := []int{}
+		for i := range RangeOver(test.Start, test.Stop, test.Jump) {
+			res = append(res, i)
+		}
+		if !reflect.DeepEqual(res, test.Result) {
+			t.Fatalf("in test %d, expected: %v, got: %v",
+				idx, test.Result, res)
+		}
+	}
+}
+
 // This tries to benchmark a basic Take 5 from a 25 int range. Due to the
 // simplicity of all the operations this should give a good view into the
 // overhead of the wrapper versus doing it directly.
